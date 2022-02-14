@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - "3456:3456"
+    image: ame/api
+    container_name: api
+    environment:
+          DB_ADDR: mongodb
+    depends_on:
+      - mongodb
+    networks: 
+      - production-network
+
+  mongodb:
+    image : mongo
+    container_name: mongodb
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /home/lucas/mongodb/database:/data/db
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+    networks: 
+         - production-network
+
+
+networks: 
+    production-network:
+        driver: bridge
